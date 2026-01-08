@@ -1,6 +1,6 @@
+
 import React from 'react';
 import { INITIAL_TEMPLATES } from '../../data/mockData';
-import { Icon } from '../../components/Icon';
 
 interface Props {
   onNavigate: (page: string) => void;
@@ -8,113 +8,92 @@ interface Props {
 
 const TemplateManagement: React.FC<Props> = ({ onNavigate }) => {
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex flex-col">
-      {/* 顶部导航 */}
-      <nav className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-30 shadow-sm">
-        <div className="flex items-center gap-10">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => onNavigate('admin-certs')}>
-            <div className="size-9 bg-primary flex items-center justify-center rounded-xl text-white shadow-lg shadow-red-500/20">
-              <Icon name="verified" className="w-6 h-6" />
+    <div className="min-h-screen bg-background-light flex flex-col">
+      {/* Updated class to className */}
+      <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 bg-white px-10 py-3 sticky top-0 z-50">
+        <div className="flex items-center gap-4 text-slate-900" onClick={() => onNavigate('admin-certs')}>
+          <div className="size-8 text-primary flex items-center justify-center bg-primary/10 rounded-lg cursor-pointer">
+            <span className="material-symbols-outlined text-[24px]">verified</span>
+          </div>
+          <h2 className="text-slate-900 text-lg font-bold leading-tight tracking-[-0.015em] cursor-pointer">证书系统</h2>
+        </div>
+        <div className="flex flex-1 justify-end gap-8">
+          <nav className="hidden md:flex items-center gap-9">
+            <button className="text-slate-600 hover:text-primary text-sm font-medium transition-colors" onClick={() => onNavigate('admin-certs')}>证书信息管理</button>
+            <button className="text-primary text-sm font-bold leading-normal relative after:content-[''] after:absolute after:left-0 after:-bottom-5 after:w-full after:h-0.5 after:bg-primary">证书模板管理</button>
+            <button className="text-slate-600 hover:text-primary text-sm font-medium transition-colors" onClick={() => onNavigate('admin-config')}>证书模板配置</button>
+          </nav>
+          <div className="flex items-center gap-3">
+            <button className="size-9 flex items-center justify-center rounded-full hover:bg-red-50 text-slate-600 transition-colors"><span className="material-symbols-outlined text-[20px]">notifications</span></button>
+            <div className="bg-center bg-no-repeat bg-cover rounded-full size-9 border border-slate-200" style={{backgroundImage: `url('https://picsum.photos/seed/user/36/36')`}}></div>
+          </div>
+        </div>
+      </header>
+
+      {/* Updated class to className */}
+      <main className="flex-1 flex justify-center py-10 px-6 sm:px-10">
+        <div className="w-full max-w-[1280px] flex flex-col gap-8">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+            <div className="flex flex-col gap-2">
+              <h1 className="text-3xl sm:text-4xl font-black leading-tight tracking-[-0.033em] text-red-950">证书模板管理</h1>
+              <p className="text-slate-500 text-base font-normal max-w-2xl">上传、编辑和管理用于颁发证书的视觉模板。支持 .PDF 和 .AI 格式导入。</p>
             </div>
-            <span className="text-xl font-black text-slate-800 tracking-tight">CertVerify <span className="text-primary text-xs font-bold bg-red-50 px-1.5 py-0.5 rounded ml-1">ADMIN</span></span>
+            <button className="group flex items-center justify-center gap-2 rounded-xl h-11 px-6 bg-primary hover:bg-primary-dark text-white text-sm font-bold shadow-lg shadow-primary/20 transition-all hover:shadow-primary/30 active:scale-95">
+              <span className="material-symbols-outlined text-[20px] group-hover:rotate-90 transition-transform duration-300">add</span>
+              <span className="truncate">上传新模板</span>
+            </button>
           </div>
-          <div className="flex items-center gap-1 h-16">
-            <button onClick={() => onNavigate('admin-certs')} className="px-4 h-full border-b-2 border-transparent text-slate-500 hover:text-primary transition-all text-sm font-medium">证书信息管理</button>
-            <button className="px-4 h-full border-b-2 border-primary text-primary font-bold text-sm">证书模板库</button>
-            <button onClick={() => onNavigate('admin-config')} className="px-4 h-full border-b-2 border-transparent text-slate-500 hover:text-primary transition-all text-sm font-medium">点位配置</button>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="size-10 rounded-full bg-slate-100 border border-slate-200 p-0.5">
-            <img className="w-full h-full rounded-full object-cover" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="avatar" />
-          </div>
-        </div>
-      </nav>
 
-      <main className="flex-1 p-8 max-w-7xl mx-auto w-full">
-        {/* 标题栏 */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-          <div>
-            <h1 className="text-3xl font-black text-slate-900 mb-2">证书模板库</h1>
-            <p className="text-slate-500">统一管理所有颁发模板，支持 A4 横向/纵向底图配置与动态变量映射。</p>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-1">
+            <div className="flex items-center gap-2 p-1 bg-white rounded-lg border border-slate-200 w-full sm:w-auto overflow-x-auto no-scrollbar">
+              <button className="px-4 py-2 rounded-md bg-red-100 text-primary text-sm font-bold shadow-sm whitespace-nowrap">全部</button>
+              <button className="px-4 py-2 rounded-md text-slate-500 hover:bg-red-50 hover:text-primary text-sm font-medium transition-colors whitespace-nowrap">荣誉证书</button>
+              <button className="px-4 py-2 rounded-md text-slate-500 hover:bg-red-50 hover:text-primary text-sm font-medium transition-colors whitespace-nowrap">结业证明</button>
+              <button className="px-4 py-2 rounded-md text-slate-500 hover:bg-red-50 hover:text-primary text-sm font-medium transition-colors whitespace-nowrap">资格认证</button>
+            </div>
+            <div className="relative w-full sm:w-64 group/search">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span className="material-symbols-outlined text-slate-400 group-focus-within/search:text-primary transition-colors text-[20px]">search</span></div>
+              <input className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-lg bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary sm:text-sm" placeholder="搜索模板名称..." type="text"/>
+            </div>
           </div>
-          <button className="px-6 h-11 bg-primary hover:bg-primary-dark text-white rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-red-500/20 active:scale-95 transition-all">
-            <Icon name="add_photo_alternate" />
-            新建底图模板
-          </button>
-        </div>
 
-        {/* 筛选栏 */}
-        <div className="flex items-center gap-2 mb-8 bg-white p-2 rounded-2xl border border-slate-200 w-fit shadow-sm">
-          <button className="px-5 py-2.5 rounded-xl bg-primary text-white text-xs font-black shadow-md shadow-red-500/10">全部模板</button>
-          <button className="px-5 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-xs font-bold transition-colors">荣誉证书</button>
-          <button className="px-5 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-xs font-bold transition-colors">结业证明</button>
-          <button className="px-5 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-xs font-bold transition-colors">资格认证</button>
-        </div>
-
-        {/* 模板网格 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {INITIAL_TEMPLATES.map(t => (
-            <div key={t.id} className="group flex flex-col bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-soft hover:shadow-lift hover:border-primary/30 transition-all duration-500">
-              <div className="relative aspect-[1.414/1] bg-slate-100 overflow-hidden">
-                <div 
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" 
-                  style={{backgroundImage: `url('${t.imageUrl}')`}}
-                ></div>
-                <div className="absolute top-4 left-4 flex gap-2">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black bg-white/90 text-primary backdrop-blur-md shadow-sm border border-white/20">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary mr-1.5 animate-pulse"></div>
-                    {t.type}
-                  </span>
-                </div>
-                {/* 悬浮操作层 */}
-                <div className="absolute inset-0 bg-primary/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center p-6 text-center">
-                  <div className="flex flex-col items-center gap-4 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <p className="text-white text-xs font-medium leading-relaxed opacity-90">{t.description}</p>
-                    <button 
-                      onClick={() => onNavigate('admin-config')}
-                      className="bg-white text-primary font-black py-2.5 px-6 rounded-xl shadow-xl hover:bg-red-50 active:scale-95 transition-all text-sm flex items-center gap-2"
-                    >
-                      <Icon name="tune" className="w-4 h-4" />
-                      进入配置点位
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {INITIAL_TEMPLATES.map(t => (
+              <div key={t.id} className="group flex flex-col bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-soft hover:shadow-lift hover:border-primary/30 transition-all duration-300 transform hover:-translate-y-1">
+                <div className="relative aspect-[1.414/1] bg-slate-100 overflow-hidden group-hover:brightness-[1.02] transition-all">
+                  <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{backgroundImage: `url('${t.imageUrl}')`}}></div>
+                  <div className="absolute top-3 left-3">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-white/90 text-primary backdrop-blur-md shadow-sm border border-white/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary mr-1.5 animate-pulse"></span>
+                      {t.type}
+                    </span>
+                  </div>
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <button className="bg-white text-primary font-bold py-2 px-5 rounded-full shadow-lg transform scale-90 group-hover:scale-100 transition-all duration-300 flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[18px]">visibility</span>
+                      预览
                     </button>
                   </div>
                 </div>
-              </div>
-
-              <div className="p-6 flex flex-col flex-1">
-                <div className="flex items-start justify-between mb-4">
-                  <h3 className="font-black text-lg text-slate-900 group-hover:text-primary transition-colors truncate">{t.name}</h3>
-                </div>
-                
-                <div className="mt-auto flex items-center justify-between pt-4 border-t border-slate-100">
-                  <div className="flex items-center gap-3">
-                    <div className="flex flex-col">
-                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">支持格式</span>
-                      <span className="text-xs font-mono font-black text-slate-600">{t.format}</span>
+                <div className="p-5 flex flex-col flex-1">
+                  <h3 className="font-bold text-lg text-slate-900 mb-2 line-clamp-1 group-hover:text-primary transition-colors">{t.name}</h3>
+                  <p className="text-xs text-slate-500 mb-5 line-clamp-2">{t.description}</p>
+                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-slate-100">
+                    <span className="text-xs font-medium text-slate-400 bg-slate-50 px-2 py-1 rounded">{t.format}</span>
+                    <div className="flex items-center gap-1">
+                      <button className="size-8 flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors" onClick={() => onNavigate('admin-config')}><span className="material-symbols-outlined text-[18px]">edit</span></button>
+                      <button className="size-8 flex items-center justify-center text-slate-400 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"><span className="material-symbols-outlined text-[18px]">delete</span></button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <button className="size-9 flex items-center justify-center text-slate-400 hover:text-primary hover:bg-red-50 rounded-xl transition-all">
-                      <Icon name="visibility" className="w-5 h-5" />
-                    </button>
-                    <button className="size-9 flex items-center justify-center text-slate-400 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all">
-                      <Icon name="delete" className="w-5 h-5" />
-                    </button>
-                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-
-          {/* 新建占位符 */}
-          <button className="group flex flex-col items-center justify-center bg-white rounded-3xl border-2 border-dashed border-slate-200 hover:border-primary hover:bg-red-50/30 transition-all duration-500 h-full min-h-[340px] shadow-sm">
-            <div className="size-16 rounded-2xl bg-slate-50 group-hover:bg-white flex items-center justify-center mb-4 transition-all shadow-sm group-hover:shadow-red-500/10 group-hover:-translate-y-1">
-              <Icon name="add" className="w-8 h-8 text-slate-400 group-hover:text-primary transition-colors" />
-            </div>
-            <p className="text-slate-900 font-black text-lg mb-1 tracking-tight">上传底图</p>
-            <p className="text-slate-400 text-xs">支持 PNG, JPG, PDF</p>
-          </button>
+            ))}
+            <button className="group flex flex-col items-center justify-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-300 hover:border-primary hover:bg-primary/5 transition-all duration-300 h-full min-h-[320px]">
+              <div className="size-16 rounded-full bg-slate-100 group-hover:bg-white flex items-center justify-center mb-4 transition-colors shadow-sm"><span className="material-symbols-outlined text-[32px] text-slate-400 group-hover:text-primary">add_photo_alternate</span></div>
+              <p className="text-slate-900 font-bold text-lg mb-1">新建模板</p>
+              <p className="text-slate-500 text-sm">点击上传或创建新设计</p>
+            </button>
+          </div>
         </div>
       </main>
     </div>
