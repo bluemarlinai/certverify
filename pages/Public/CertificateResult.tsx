@@ -43,47 +43,71 @@ const CertificateResult: React.FC<Props> = ({ recipient, onNavigate }) => {
     ctx.font = '24px "Manrope", sans-serif';
     ctx.fillText('CERTIFICATE OF HONOR', canvas.width / 2, 240);
 
+    // Name Line Calculation
     ctx.textAlign = 'left';
-    ctx.fillStyle = '#1e293b';
-    ctx.font = 'bold 48px "Noto Serif SC", serif';
-    ctx.fillText(recipient.name, 200, 400);
+    ctx.fillStyle = '#000000';
+    ctx.font = 'bold 54px "Noto Serif SC", serif';
+    const startX = 180;
+    const nameY = 400;
+    const nameText = recipient.name;
+    const nameWidth = Math.max(ctx.measureText(nameText).width, 200);
     
-    ctx.font = '32px "Noto Serif SC", serif';
-    ctx.fillText(' 先生/女士：', 200 + ctx.measureText(recipient.name).width, 400);
+    // Draw Underline for Name
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(startX, nameY + 10);
+    ctx.lineTo(startX + nameWidth + 20, nameY + 10);
+    ctx.stroke();
 
-    ctx.fillStyle = '#475569';
-    ctx.font = '30px "Noto Serif SC", serif';
-    const content = `在2024年度“卓越创新奖”评选活动中表现优异，荣获 ${recipient.award}，特发此证，以资鼓励。`;
+    ctx.fillText(nameText, startX + 10, nameY);
     
-    // Simple line wrapping
-    const words = content.split('');
-    let line = '';
-    let y = 480;
-    for(let n = 0; n < words.length; n++) {
-      let testLine = line + words[n];
-      let metrics = ctx.measureText(testLine);
-      if (metrics.width > 840 && n > 0) {
-        ctx.fillText(line, 200, y);
-        line = words[n];
-        y += 50;
-      } else {
-        line = testLine;
-      }
-    }
-    ctx.fillText(line, 200, y);
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '32px "Noto Serif SC", serif';
+    ctx.fillText(' 先生/女士：', startX + nameWidth + 30, nameY);
+
+    // Main Content with Inline Styling (Red Award Name)
+    const contentY = 480;
+    const lineHeight = 50;
+    const maxWidth = 880;
+    
+    const chunks = [
+      { text: '在2024年度“卓越创新奖”评选活动中表现优异，荣获 ', color: '#475569', bold: false },
+      { text: recipient.award, color: '#d32f2f', bold: true },
+      { text: '，特发此证，以资鼓励。', color: '#475569', bold: false }
+    ];
+
+    let currentX = startX;
+    let currentY = contentY;
+
+    chunks.forEach(chunk => {
+      ctx.fillStyle = chunk.color;
+      ctx.font = `${chunk.bold ? 'bold' : 'normal'} 30px "Noto Serif SC", serif`;
+      
+      const words = chunk.text.split('');
+      words.forEach(char => {
+        const charWidth = ctx.measureText(char).width;
+        if (currentX + charWidth > startX + maxWidth) {
+          currentX = startX;
+          currentY += lineHeight;
+        }
+        ctx.fillText(char, currentX, currentY);
+        currentX += charWidth;
+      });
+    });
 
     // Footer
     ctx.textAlign = 'right';
     ctx.fillStyle = '#1e293b';
     ctx.font = 'bold 36px "Noto Serif SC", serif';
-    ctx.fillText('CertVerify 组委会', canvas.width - 200, 700);
+    ctx.fillText('CertVerify 组委会', canvas.width - 180, 700);
     ctx.font = '24px "Noto Serif SC", serif';
-    ctx.fillText(recipient.date, canvas.width - 200, 750);
+    ctx.fillText(recipient.date, canvas.width - 180, 750);
 
     ctx.textAlign = 'left';
     ctx.fillStyle = '#94a3b8';
     ctx.font = '18px "JetBrains Mono", monospace';
-    ctx.fillText(`ID: ${recipient.certNumber}`, 200, 750);
+    ctx.fillText(`ID: ${recipient.certNumber}`, 180, 750);
 
     // Random filename generation
     const randomString = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -147,11 +171,14 @@ const CertificateResult: React.FC<Props> = ({ recipient, onNavigate }) => {
                     <div className="text-[8px] sm:text-[12px] text-primary/60 uppercase tracking-[0.3em] font-bold">Certificate of Honor</div>
                   </div>
 
-                  <div className="flex-1 w-full flex flex-col items-center justify-center gap-3 sm:gap-6 z-10 max-w-lg">
-                    <div className="cert-font text-slate-800 text-lg sm:text-2xl w-full text-left">
-                      <span className="font-bold text-2xl sm:text-4xl text-black border-b-2 border-slate-200 pb-1 px-2">{recipient.name}</span> 先生/女士：
+                  <div className="flex-1 w-full flex flex-col items-center justify-center gap-3 sm:gap-6 z-10 max-w-lg px-4">
+                    <div className="cert-font text-slate-800 text-lg sm:text-2xl w-full text-left flex items-baseline gap-2 overflow-hidden">
+                      <span className="font-bold text-2xl sm:text-4xl text-black border-b-2 border-slate-200 pb-1 px-4 min-w-[120px] text-center whitespace-nowrap overflow-visible">
+                        {recipient.name}
+                      </span> 
+                      <span className="shrink-0">先生/女士：</span>
                     </div>
-                    <div className="cert-font text-slate-600 text-sm sm:text-lg text-justify leading-relaxed indent-10">
+                    <div className="cert-font text-slate-600 text-sm sm:text-lg text-justify leading-relaxed indent-10 w-full">
                       在2024年度“卓越创新奖”评选活动中表现优异，荣获 <span className="text-primary font-bold">{recipient.award}</span>，特发此证，以资鼓励。
                     </div>
                   </div>
@@ -185,19 +212,6 @@ const CertificateResult: React.FC<Props> = ({ recipient, onNavigate }) => {
                 <span className="material-symbols-outlined group-hover:bounce">download</span>
                 下载保存到相册
               </button>
-              <div className="flex w-full gap-3">
-                <button 
-                  onClick={() => window.print()}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition-all"
-                >
-                  <span className="material-symbols-outlined text-[20px]">print</span>打印
-                </button>
-                <button 
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition-all"
-                >
-                  <span className="material-symbols-outlined text-[20px]">share</span>分享
-                </button>
-              </div>
             </div>
           </div>
           
@@ -209,7 +223,7 @@ const CertificateResult: React.FC<Props> = ({ recipient, onNavigate }) => {
       </main>
 
       <footer className="w-full py-6 text-center border-t border-red-50 bg-white/50 mt-auto">
-        <p className="text-[10px] text-slate-400 uppercase tracking-widest">© 2024 CertVerify Security Infrastructure</p>
+        <p className="text-[10px] text-slate-400 uppercase tracking-widest">© 2026 证书查询验证系统 版权所有</p>
       </footer>
     </div>
   );
