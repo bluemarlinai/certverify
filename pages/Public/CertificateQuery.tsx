@@ -47,10 +47,21 @@ const CertificateQuery: React.FC<Props> = ({ onNavigate }) => {
             </div>
             <h1 className="text-lg font-bold tracking-tight text-slate-900 truncate">CertVerify</h1>
           </div>
-          <button className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors rounded-lg hover:bg-red-50">
-            <span className="material-symbols-outlined text-[20px]">help</span>
-            <span className="hidden sm:inline">帮助中心</span>
-          </button>
+          
+          <div className="flex items-center gap-1 sm:gap-2">
+            <button 
+              onClick={() => onNavigate('admin-certs')}
+              className="flex items-center gap-2 px-3 py-2 text-sm font-bold text-slate-600 hover:text-primary transition-colors rounded-lg hover:bg-red-50"
+            >
+              <span className="material-symbols-outlined text-[20px]">admin_panel_settings</span>
+              <span className="hidden sm:inline">管理后台</span>
+            </button>
+            <div className="w-px h-4 bg-slate-200 mx-1"></div>
+            <button className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors rounded-lg hover:bg-red-50">
+              <span className="material-symbols-outlined text-[20px]">help</span>
+              <span className="hidden sm:inline">帮助中心</span>
+            </button>
+          </div>
         </div>
       </header>
 
