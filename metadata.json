@@ -1,0 +1,5 @@
+{
+  "name": "CertVerify - Certificate Management & Verification System",
+  "description": "A comprehensive system for generating, managing, and verifying award certificates. Includes a management backend for staff and a mobile-friendly public portal for recipients to query and download their certificates.",
+  "requestFramePermissions": []
+}
