@@ -1,17 +1,45 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ORGANIZATIONS, INITIAL_RECIPIENTS } from '../../data/mockData';
+import { Template } from '../../types'; // Import Template type
 
 interface Props {
   onNavigate: (page: string, data?: any) => void;
+  templates: Template[]; // 从 App.tsx 接收模板列表
 }
 
-const CertificateQuery: React.FC<Props> = ({ onNavigate }) => {
+const CertificateQuery: React.FC<Props> = ({ onNavigate, templates }) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [org, setOrg] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // --- 新增: 返回顶部按钮相关 ---
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const mainContentRef = useRef<HTMLElement>(null);
+
+  // --- 新增: 监听主内容区滚动 ---
+  useEffect(() => {
+    const mainEl = mainContentRef.current;
+    if (!mainEl) return;
+
+    const handleScroll = () => {
+      if (mainEl.scrollTop > 200) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+
+    mainEl.addEventListener('scroll', handleScroll);
+    return () => mainEl.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // --- 新增: 点击返回顶部 ---
+  const handleBackToTop = () => {
+    mainContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleSearch = () => {
     if (!name || !phone || !org) {
@@ -30,7 +58,11 @@ const CertificateQuery: React.FC<Props> = ({ onNavigate }) => {
 
       setLoading(false);
       if (match) {
-        onNavigate('public-result', match);
+        if (match.isEnabled) {
+          onNavigate('public-result', match);
+        } else {
+          setError('此证书已暂停使用，请联系管理员'); // NEW: Specific error for disabled certificates
+        }
       } else {
         setError('未查询到证书，请核对信息后再试');
       }
@@ -38,8 +70,8 @@ const CertificateQuery: React.FC<Props> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="bg-rose-50 min-h-screen flex flex-col font-display selection:bg-primary selection:text-white">
-      <header className="w-full bg-white border-b border-red-100 sticky top-0 z-50">
+    <div className="h-full flex flex-col bg-rose-50 font-display selection:bg-primary selection:text-white">
+      <header className="flex-none w-full bg-white border-b border-red-100 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="size-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
@@ -65,7 +97,7 @@ const CertificateQuery: React.FC<Props> = ({ onNavigate }) => {
         </div>
       </header>
 
-      <main className="flex-grow flex flex-col items-center justify-start pt-8 pb-10 px-4 sm:px-6">
+      <main ref={mainContentRef} className="flex-1 overflow-y-auto flex flex-col items-center justify-start pt-8 pb-10 px-4 sm:px-6">
         <div className="w-full max-w-lg flex flex-col gap-6">
           <div className="text-center">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-slate-900 mb-2">证书查询</h2>
@@ -134,11 +166,19 @@ const CertificateQuery: React.FC<Props> = ({ onNavigate }) => {
         </div>
       </main>
 
-      <footer className="w-full py-6 sm:py-8 text-center border-t border-red-100 bg-white mt-auto">
+      <footer className="flex-none w-full py-6 sm:py-8 text-center border-t border-red-100 bg-white">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className="text-sm text-slate-500">© 2026 证书查询验证系统 版权所有</p>
         </div>
       </footer>
+       <button
+        onClick={handleBackToTop}
+        className={`fixed bottom-8 right-8 z-50 size-12 bg-primary hover:bg-primary-dark text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 active:scale-95 ${showBackToTop ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'}`}
+        aria-label="返回顶部"
+        title="返回顶部"
+      >
+        <span className="material-symbols-outlined">arrow_upward</span>
+      </button>
     </div>
   );
 };
